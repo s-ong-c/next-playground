@@ -3,6 +3,7 @@ import * as React from 'react';
 import Button from '../common/Button';
 import LabelInput from '../common/LabelInput';
 import styled from 'styled-components';
+import useInput from '../../../utils/hooks/useInput';
 
 const LoginTemplateBlock = styled.div`
   padding: 24px;
@@ -20,22 +21,32 @@ const Wrapper = styled.div`
 `;
 
 export interface LoginTemplateProps {
-  onSubmit: () => void;
+  onSendAuthEmail: (email: string) => void;
 }
 
-function LoginTemplate({ onSubmit }: LoginTemplateProps) {
+function LoginTemplate({ onSendAuthEmail }: LoginTemplateProps) {
+  const [email, onChangeEmail] = useInput('');
+  console.log(email);
   return (
     <LoginTemplateBlock>
       {/** Header */}
       <Wrapper>
         <h1>로그인</h1>
-        <LabelInput label="*이메일로 로그인" color={'primaryLight'} placeholder="email@email.com" />
+        <LabelInput
+          label="*이메일로 로그인"
+          value={email}
+          onChange={onChangeEmail}
+          color={'primaryLight'}
+          placeholder="email@email.com"
+        />
         <Button
           style={{
             borderRadius: '6px',
           }}
           color="primaryMain"
-          onClick={() => onSubmit()}
+          onClick={() => {
+            onSendAuthEmail(email);
+          }}
         >
           로그인
         </Button>
