@@ -82,10 +82,10 @@ const ToolbarItem = styled.button`
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
-  color: ${palette.typo3};
+  color: ${palette.typo1};
   cursor: pointer;
   &:hover {
-    color: ${palette.typo3};
+    color:black;
     background: ${palette.typo3};
   }
   background: none;

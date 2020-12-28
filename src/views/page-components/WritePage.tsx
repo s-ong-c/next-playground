@@ -2,27 +2,16 @@ import * as React from 'react';
 
 import dynamic from 'next/dynamic';
 
-const Editor = dynamic(() => import('../components/editor/QuillEditor'), {
+const Editor = dynamic(() => import('../components/editor/QuillEditors'), {
   ssr: false,
 });
 function WritePage() {
-  const onConvertEditorMode = (markdown: string) => {};
-  const onChangeTitle = (title: string) => console.log(title);
-  const onChangeHTML = (html: string) => console.log(html);
-  const onChangeTextBody = (textBody: string) => console.log(textBody);
+  const [html, setHtml] = React.useState<string>('');
+  const onChangeHTML = (html: string) => {
+    setHtml(html);
+  };
   return (
-    <Editor
-      title={'asss'}
-      onConvertEditorMode={onConvertEditorMode}
-      onChangeTitle={onChangeTitle}
-      initialHtml={''}
-      tagInput={<div />}
-      onChangeHTML={onChangeHTML}
-      onChangeTextBody={onChangeTextBody}
-      footer={<div />}
-      onUpload={() => {}}
-      lastUploadedImage={null}
-    />
+    <Editor initialHtml={html} onChangeHTML={onChangeHTML} />
   );
 }
 
