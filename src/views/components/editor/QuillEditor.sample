@@ -3,7 +3,7 @@ import 'quill/dist/quill.snow.css';
 
 import * as React from 'react';
 
-import Quill, { RangeStatic } from 'quill';
+import Quill from 'quill';
 import {
   detectJSDOM,
   getScrollBottom,
@@ -266,7 +266,7 @@ export default class QuillEditor extends React.Component<
         key: 'backspace',
         empty: true,
         format: ['code-block'],
-        handler: (range: RangeStatic, context: any) => {
+        handler: () => {
           quill.format('code-block', false);
         },
       },
@@ -274,7 +274,7 @@ export default class QuillEditor extends React.Component<
         key: 'enter',
         empty: true,
         format: ['blockquote'],
-        handler: (range: RangeStatic, context: any) => {
+        handler: () => {
           quill.format('blockquote', false);
         },
       },
@@ -282,9 +282,11 @@ export default class QuillEditor extends React.Component<
         key: 'backspace',
         empty: true,
         format: ['blockquote'],
-        handler: (range: RangeStatic, context: any) => {
-          quill.format('blockquote', false);
-        },
+        handler: () =>
+          // range: RangeStatic, context: any
+          {
+            quill.format('blockquote', false);
+          },
       },
     };
 
@@ -307,29 +309,29 @@ export default class QuillEditor extends React.Component<
           bindings,
         },
         markdownShortcuts: {},
-        toolbar: {
-          container: '#toolbar',
-          handlers: {
-            link: (value: string) => {
-              const range = quill.getSelection();
-              if (!range) return;
-              const bounds = quill.getBounds(range.index);
-              const format = quill.getFormat();
-              const defaultValue = format.link || '';
-              this.setState({
-                addLink: true,
-                addLinkPosition: {
-                  left: bounds.left,
-                  top: bounds.top + bounds.height,
-                },
-                addLinkDefaultValue: defaultValue,
-              });
-            },
-            image: () => {
-              this.props.onUpload();
-            },
-          },
-        },
+        // toolbar: {
+        //   container: '#toolbar',
+        //   handlers: {
+        //     link: () => {
+        //       const range = quill.getSelection();
+        //       if (!range) return;
+        //       const bounds = quill.getBounds(range.index);
+        //       const format = quill.getFormat();
+        //       const defaultValue = format.link || '';
+        //       this.setState({
+        //         addLink: true,
+        //         addLinkPosition: {
+        //           left: bounds.left,
+        //           top: bounds.top + bounds.height,
+        //         },
+        //         addLinkDefaultValue: defaultValue,
+        //       });
+        //     },
+        //     image: () => {
+        //       this.props.onUpload();
+        //     },
+        //   },
+        // },
         // syntax: {
         //   interval: 200,
         // },
@@ -345,7 +347,7 @@ export default class QuillEditor extends React.Component<
     (window as any).quill = quill;
 
     // handle blur and focus
-    quill.on('selection-change', (range, oldRange, source) => {
+    quill.on('selection-change', (range, oldRange) => {
       if (range === null && oldRange !== null) {
         this.setState({
           editorFocus: false,
@@ -394,7 +396,7 @@ export default class QuillEditor extends React.Component<
         });
       }
     };
-    quill.on('text-change', (delta, oldContents, source) => {
+    quill.on('text-change', (delta) => {
       this.props.onChangeHTML(quill.root.innerHTML);
       this.props.onChangeTextBody(quill.getText());
       const lastOps = delta.ops[delta.ops.length - 1];
@@ -438,7 +440,7 @@ export default class QuillEditor extends React.Component<
 
   // blocks [Enter] key
   handleTitleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ([13].includes(e.keyCode)) {
+    if ('Enter' === e.code) {
       e.preventDefault();
       // if (this.quill) {
       //   this.quill.focus();
@@ -501,18 +503,18 @@ export default class QuillEditor extends React.Component<
     const {
       addLink,
       addLinkPosition,
-      askChangeEditor,
       addLinkDefaultValue,
       shadow,
     } = this.state;
+
     return (
       <QuillEditorWrapper data-testid="quill">
         <StyledTitleTextarea
           placeholder="Title"
           onKeyDown={this.handleTitleKeyDown}
-          inputRef={(ref) => {
-            this.titleTextarea = ref;
-          }}
+          // inputRef={(ref) => {
+          //   this.titleTextarea = ref;
+          // }}
           onFocus={this.handleTitleFocus}
           onBlur={this.handleTitleBlur}
           tabIndex={1}
