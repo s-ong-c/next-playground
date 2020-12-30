@@ -107,7 +107,7 @@ function LabelInput({
   ...rest
 }: LabelInputProps) {
   const [focus, setFocus] = useState(false);
-  const [errorCheck, setErrorCheck] = useState(false);
+  const [, setErrorCheck] = useState(false);
   useEffect(() => {
     if (isError) {
       setFocus(true);
